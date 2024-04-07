@@ -12,4 +12,17 @@ export class usersMongoose{
     async getUserByEmail({email}){
         return await usersModel.findOne({email}).lean({virtuals: true});
     }
+    async updateUserCart(userId, cartId) {
+        try {
+            const user = await usersModel.findOneAndUpdate(
+                { _id: userId },
+                { cartId: cartId },
+                { new: true }
+            );
+            return user;
+        } catch (error) {
+            throw new Error('Error updating user cart');
+        }
+    }
+    
 }

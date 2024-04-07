@@ -30,17 +30,21 @@ export const addCart = async (req, res, next) => {
     }
 };
 
-
 export const addProductInCart = async (req, res, next) => {
     try {
-        const { productId, cid } = req.params;
-        await cartService.addProductToCart(cid, productId);
+        const { cid, pid } = req.body; // Cambia de req.params a req.body para obtener los IDs
+
+        // Verifica si los IDs son válidos antes de llamar al servicio
+        if (!cid || !pid) {
+            return res.status(400).json({ error: 'Cart ID and Product ID are required' });
+        }
+
+        await cartService.addProductToCart(cid, pid);
         res.json({ message: 'Product added to cart successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
 export const deleteCart = async (req, res, next) => {
     try {
         const { cId } = req.params;

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const secretKey = process.env.SESSION_SECRET; // Clave secreta para firmar y verificar los tokens
+const secretKey = process.env.SESSION_SECRET; 
 
 // Función para generar un token de restablecimiento de contraseña
 const generateResetToken = (userId) => {

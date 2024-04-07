@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 import leanVirtuals from 'mongoose-lean-virtuals';
 import paginate from 'mongoose-paginate-v2';
 
-const productsCollection = 'products';
-
 const productsSchema = mongoose.Schema({
     title: {
         type: String,
@@ -40,11 +38,11 @@ productsSchema.virtual('id').get(function () {
 });
 
 productsSchema.set('toJSON', { virtuals: true });
-
 productsSchema.set('toObject', { virtuals: true });
 
 productsSchema.plugin(paginate);
-
 productsSchema.plugin(leanVirtuals);
 
-export const productModel = mongoose.model(productsCollection, productsSchema);
+const productsModel = mongoose.model('Product', productsSchema); 
+
+export default productsModel;

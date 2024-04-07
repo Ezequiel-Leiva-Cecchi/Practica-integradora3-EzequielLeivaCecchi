@@ -10,6 +10,7 @@ import passport from 'passport';
 import initialzePassport from './config/passport.config.js';
 import productRouter from './routes/products.routes.js';
 import cartRouter from './routes/cart.routes.js';
+// import passwordResetRouter from './routes/passwordReset.routes.js'; 
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -57,6 +58,8 @@ app.use('/', viewsRoutes);
 app.use('/api/products', productRouter);
 // Rutas de carrito
 app.use('/api/cart', cartRouter);
+// Rutas de restablecimiento de contraseña
+// app.use('/api/password-reset', passwordResetRouter);
 
 app.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT}`);

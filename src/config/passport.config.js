@@ -1,53 +1,61 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { usersDAO } from "../dao/users/indexUsers.js"; // Importa el DAO de usuarios
-import { createHash, isValidPassword } from "../utils/bcrypt.js"; // Importa funciones de utilidad para el manejo de contraseñas
 import { Strategy as GithubStrategy } from "passport-github2";
+import { usersDAO } from "../dao/users/indexUsers.js";
+import { cartDAO } from "../dao/cart/indexCart.js"; 
 
-const localStrategy = LocalStrategy; // Alias para la estrategia local
+const localStrategy = LocalStrategy;
 
-// Función para inicializar Passport
 const initializePassport = () => {
     // Estrategia para el registro de usuarios
     passport.use('register', new localStrategy(
-        { passReqToCallback: true, usernameField: 'email' }, // Opciones de configuración
-        async (req, username, password, done) => { // Función de verificación de registro
-            const { first_name, last_name, email } = req.body; // Obtiene los datos del cuerpo de la solicitud
+        { passReqToCallback: true, usernameField: 'email' },
+        async (req, username, password, done) => {
+            const { first_name, last_name, email } = req.body;
             try {
-                const user = await usersDAO.getUserByEmail({ email: username }); // Busca si ya existe un usuario con ese correo electrónico
+                const user = await usersDAO.getUserByEmail({ email: username });
                 if (user) {
-                    return done(null, false); // Si el usuario ya existe, devuelve falso
+                    return done(null, false);
                 }
-                const hashedPassword = await createHash(password); // Genera un hash de la contraseña
-                const newUser = await usersDAO.addUsers({ // Agrega el nuevo usuario a la base de datos
+                const newUser = await usersDAO.addUsers({
                     first_name,
                     last_name,
                     email,
-                    password: hashedPassword,
+                    password,
                 });
-                return done(null, newUser); 
+
+                // Crear un carrito para el nuevo usuario registrado
+                const newCart = await cartDAO.createCart();
+                await usersDAO.updateUserCart(newUser._id, newCart._id);
+
+                return done(null, newUser);
             } catch (error) {
-                return done(error); 
+                return done(error);
             }
         }
     ));
 
     // Estrategia para el inicio de sesión
     passport.use('login', new LocalStrategy(
-        { usernameField: 'email' }, // Opciones de configuración
-        async (username, password, done) => { // Función de verificación de inicio de sesión
+        { usernameField: 'email' },
+        async (username, password, done) => {
             try {
-                const user = await usersDAO.getUserByEmail({ email: username }); // Busca el usuario por correo electrónico
+                const user = await usersDAO.getUserByEmail({ email: username });
                 if (!user) {
-                    console.log('User doesn\'t exist'); // Si el usuario no existe, imprime un mensaje de error
-                    return done(null, false); 
+                    console.log('User doesn\'t exist');
+                    return done(null, false);
                 }
-                if (!isValidPassword(user, password)) { 
-                    return done(null, false); 
+                if (!isValidPassword(user, password)) {
+                    return done(null, false);
                 }
-                return done(null, user); 
+
+                // Crear un carrito para el usuario que ha iniciado sesión
+                const newCart = await cartDAO.createCart(); 
+                await usersDAO.updateUserCart(user._id, newCart._id);
+
+                return done(null, user);
             } catch (error) {
-                return done(error); 
+                return done(error);
             }
         }
     ));
@@ -72,9 +80,9 @@ const initializePassport = () => {
                     email: profile._json.email || profile.username, // Usa el correo electrónico o el nombre de usuario como correo electrónico
                     password: 'CreateWithGithub', // Contraseña predeterminada para usuarios de GitHub
                 });
-                return done(null, newUser); 
+                return done(null, newUser);
             } catch (error) {
-                return done(error); 
+                return done(error);
             }
         }
     ));

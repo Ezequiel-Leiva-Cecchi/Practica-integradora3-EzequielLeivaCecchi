@@ -21,8 +21,11 @@ export const getCartById = async (cartId) => {
 
 export const addProductToCart = async (cartId, productId) => {
     try {
-        await cartDAO.addProductToCart(cartId, productId);
+        await cartDAO.addProductCarts(cartId, productId);
     } catch (error) {
+    
+        console.error(`Error adding product to cart. Cart ID: ${cartId}, Product ID: ${productId}.`);
+        console.error('Original error:', error);
         throw new Error('Failed to add product to cart');
     }
 };

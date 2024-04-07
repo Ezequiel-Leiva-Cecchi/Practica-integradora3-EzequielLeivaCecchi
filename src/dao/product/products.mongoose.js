@@ -1,11 +1,11 @@
-import { productModel } from "../../models/porducts.model.js";
+import productsModel from "../../models/porducts.model.js";
 
 export class productMongoose {
     async getProducts() {
-        return await productModel.find().lean({ virtuals: true });
+        return await productsModel.find().lean({ virtuals: true });
     }
     async getPaginatedProducts(query, paginationOptions) {
-        const products = await productModel.paginate(
+        const products = await productsModel.paginate(
             { title: { $regex: query ? query : '', $options: 'i' } },
             { ...paginationOptions, lean: true }
         );
@@ -26,20 +26,20 @@ export class productMongoose {
     }
 
     async getProductsById(id) {
-        return await productModel.findById(id).lean({ virtuals: true });
+        return await productsModel.findById(id).lean({ virtuals: true });
     }
     async getProductsByIds(products) {
-        const groupProducts = await productModel.find({ _id: { $in: products } }).lean({ virtuals: true });
+        const groupProducts = await productsModel.find({ _id: { $in: products } }).lean({ virtuals: true });
         return groupProducts;
     }
     async addProduct(Object) {
-        const newProduct = new productModel(Object);
+        const newProduct = new productsModel(Object);
         await newProduct.save();
     }
     async editProduct({ id, Object }) {
-        return await productModel.findOneAndUpdate({ _id: id }, Object);
+        return await productsModel.findOneAndUpdate({ _id: id }, Object);
     }
     async deleteProduct(id) {
-        return await productModel.findOneAndDelete({ _id: id });
+        return await productsModel.findOneAndDelete({ _id: id });
     }
 }

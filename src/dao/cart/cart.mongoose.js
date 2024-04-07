@@ -30,7 +30,7 @@ export class cartMongoose {
         } else {
             cart.products.push({ product: product._id, quantity: 1, });
         }
-        await cart.save(); 
+        await cart.save();
     }
 
     // Método para eliminar un producto de un carrito
@@ -44,7 +44,7 @@ export class cartMongoose {
             throw new Error('Product is not in the cart');
         }
         cart.products = cart.products.filter((item) => item.product.id !== productId);
-        await cart.save(); 
+        await cart.save();
     }
 
     // Método para eliminar un carrito por su ID
@@ -68,7 +68,7 @@ export class cartMongoose {
         }
         cart.products[existingCartProductIndex].quantity =
             updateQuantity <= 0 ? 1 : updateQuantity;
-        await cart.save(); 
+        await cart.save();
     }
 
     // Método para actualizar un carrito con nuevos productos
@@ -84,6 +84,14 @@ export class cartMongoose {
             throw new Error(`Product with id ${unavailableProductIds[0]} doesnt exist`);
         }
         cart.products = updateProduct;
-        return await cart.save(); 
+        return await cart.save();
+    }
+    async createCart() {
+        try {
+            const newCart = await cartModel.create({ products: [] });
+            return newCart;
+        } catch (error) {
+            throw new Error('Error creating cart: ' + error.message);
+        }
     }
 }
