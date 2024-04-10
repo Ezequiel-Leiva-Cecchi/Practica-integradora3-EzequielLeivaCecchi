@@ -1,5 +1,6 @@
 import { usersDAO } from '../dao/users/index.js'; 
 import { cartService } from '../services/cartService.js';
+import { createHash } from '../utils/bcrypt.js';
 
 export const register = async (userData) => {
     try {
@@ -16,6 +17,10 @@ export const register = async (userData) => {
         } else {
             userData.isAdmin = false;
         }
+        
+        // Hashear la contraseña antes de almacenarla en la base de datos
+        userData.password = createHash(userData.password);
+        
         const newUser = await usersDAO.createUser(userData);
         
         const newCart = await cartService.createCart();

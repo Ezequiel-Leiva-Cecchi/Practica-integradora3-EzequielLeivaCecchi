@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { usersDAO } from "../dao/users/indexUsers.js";
 import { cartDAO } from "../dao/cart/indexCart.js";
-import { isValidPassword } from "../utils/bcrypt.js";
+import { isValidPassword , createHash } from "../utils/bcrypt.js";
 
 const localStrategy = LocalStrategy;
 
@@ -21,17 +21,21 @@ const initializePassport = () => {
                     return done(null, false);
                 }
                 console.log('Creating new user:', email);
+
+                // Obtener el hash de la contraseña
+                const hashedPassword = createHash(password);
+                
                 const newUser = await usersDAO.addUsers({
                     first_name,
                     last_name,
                     email,
-                    password,
+                    password: hashedPassword,
                 });
-    
+
                 // Crear un carrito para el nuevo usuario registrado
                 const newCart = await cartDAO.createCart();
                 await usersDAO.updateUserCart(newUser._id, newCart._id);
-    
+
                 return done(null, newUser);
             } catch (error) {
                 console.error("Error registering user:", error);
@@ -55,7 +59,6 @@ const initializePassport = () => {
                 if (!isValidPassword(user, password)) { // Utiliza la función isValidPassword aquí
                     return done(null, false);
                 }
-    
                 // Crear un carrito para el usuario que ha iniciado sesión
                 const newCart = await cartDAO.createCart();
                 await usersDAO.updateUserCart(user._id, newCart._id);
