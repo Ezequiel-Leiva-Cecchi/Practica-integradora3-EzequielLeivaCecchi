@@ -11,37 +11,41 @@ export const createCart = async () => {
     }
 };
 
-export const getCartById = async (cartId) => {
+export const getCartById = async (cid) => {
     try {
-        return await cartDAO.getCartById(cartId);
+        console.log("Fetching cart with ID:", cid); 
+        const cart = await cartDAO.getCartById(cid);
+        console.log("Retrieved cart:", cart);  
+        return cart;
     } catch (error) {
+        console.error("Error fetching cart:", error); 
         throw new Error('Failed to get cart');
     }
 };
 
-export const addProductToCart = async (cartId, productId) => {
+export const addProductToCart = async (cid, pid) => {
     try {
-        await cartDAO.addProductCarts(cartId, productId);
+        await cartDAO.addProductCarts(cid, pid);
     } catch (error) {
     
-        console.error(`Error adding product to cart. Cart ID: ${cartId}, Product ID: ${productId}.`);
+        console.error(`Error adding product to cart. Cart ID: ${cid}, Product ID: ${pid}.`);
         console.error('Original error:', error);
         throw new Error('Failed to add product to cart');
     }
 };
 
-export const updateCart = async (cartId, updateData) => {
+export const deleteCart = async (cid) => {
     try {
-        return await cartDAO.updateCart(cartId, updateData);
+        await cartDAO.deleteCart(cid);
     } catch (error) {
-        throw new Error('Failed to update cart');
+        throw new Error('Failed to delete cart');
     }
 };
 
-export const deleteCart = async (cartId) => {
+export const deleteProductInCart = async ({ cid, pid }) => {
     try {
-        await cartDAO.deleteCart(cartId);
+        await cartDAO.deleteProductCart( cid, pid );
     } catch (error) {
-        throw new Error('Failed to delete cart');
+        throw new Error('Failed to delete product from cart');
     }
 };

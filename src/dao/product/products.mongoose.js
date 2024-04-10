@@ -1,6 +1,6 @@
 import productsModel from "../../models/porducts.model.js";
 
-export class productMongoose {
+export class productsMongoose {
     async getProducts() {
         return await productsModel.find().lean({ virtuals: true });
     }
@@ -25,21 +25,21 @@ export class productMongoose {
         };
     }
 
-    async getProductsById(id) {
-        return await productsModel.findById(id).lean({ virtuals: true });
+    async getProductById(pid) {
+        return await productsModel.findById(pid).lean({ virtuals: true });
     }
-    async getProductsByIds(products) {
-        const groupProducts = await productsModel.find({ _id: { $in: products } }).lean({ virtuals: true });
+    async getProductsByIds(pid) {
+        const groupProducts = await productsModel.find({ _id: { $in: pid} }).lean({ virtuals: true });
         return groupProducts;
     }
-    async addProduct(Object) {
-        const newProduct = new productsModel(Object);
+    async addProduct(productData) {
+        const newProduct = new productsModel(productData);
         await newProduct.save();
     }
-    async editProduct({ id, Object }) {
-        return await productsModel.findOneAndUpdate({ _id: id }, Object);
+    async editProduct({ pid, updateData }) {
+        return await productsModel.findOneAndUpdate({ _id: pid }, updateData);
     }
-    async deleteProduct(id) {
-        return await productsModel.findOneAndDelete({ _id: id });
+    async deleteProduct(pid) {
+        return await productsModel.findOneAndDelete({ _id: pid });
     }
 }

@@ -34,13 +34,11 @@ export const addProduct = async (req, res, next) => {
         if (absentProperty) {
             throw new Error(`Absent property ${absentProperty}`);
         }
-        await productsServices.addProduct(body);
 
-        const userId = req.user._id; 
-        const user = await usersService.getUserById(userId);
-        if (!user.cartId) {
-            const newCart = await cartService.createCart();
-            await usersService.updateUserCart(userId, newCart._id);
+        // Verifica si req.user está definido antes de acceder a req.user._id
+        const userId = req.user ? req.user._id : null;
+        if (!userId) {
+            throw new Error('User not authenticated');
         }
 
         res.json({ message: 'Product added successfully' });

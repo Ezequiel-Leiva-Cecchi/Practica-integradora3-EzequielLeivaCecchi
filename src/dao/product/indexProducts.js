@@ -1,5 +1,5 @@
 import { productsFs } from "./products.fs.js";
-import { productMongoose } from "./products.mongoose.js";
+import { productsMongoose } from "./products.mongoose.js";
 
 // Declaración de la variable para el acceso a los productos
 let productDAO;
@@ -11,7 +11,7 @@ const DAO_OPTION = process.env.DAO_OPTION;
 switch (DAO_OPTION) {
   case 'mongoose':
     // Si la opción es 'mongoose', utiliza el acceso a los productos mediante Mongoose
-    productDAO = new productMongoose();
+    productDAO = new productsMongoose();
     break;
   case 'fs':
     // Si la opción es 'fs', utiliza el acceso a los productos mediante FileSystem
@@ -19,7 +19,7 @@ switch (DAO_OPTION) {
     break;
   default:
     // Por defecto, utiliza el acceso a los productos mediante Mongoose
-    productDAO = new productMongoose();
+    productDAO = new productsMongoose();
 }
 
 // Exporta el DAO seleccionado para el acceso a los productos

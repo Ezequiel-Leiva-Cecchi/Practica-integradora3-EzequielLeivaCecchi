@@ -9,9 +9,9 @@ export const getProducts = async (query, options) => {
     }
 };
 
-export const getProductById = async (productId) => {
+export const getProductById = async (pid) => {
     try {
-        const product = await productDAO.getProductById(productId);
+        const product = await productDAO.getProductById(pid);
         if (!product) {
             throw new Error('PRODUCT NOT FOUND');
         }
@@ -23,7 +23,9 @@ export const getProductById = async (productId) => {
 
 export const addProduct = async (productData) => {
     try {
+        // Guardar el producto en la base de datos
         await productDAO.addProduct(productData);
+        // Resto del código, si lo hay
     } catch (error) {
         throw new Error(error.message);
     }
