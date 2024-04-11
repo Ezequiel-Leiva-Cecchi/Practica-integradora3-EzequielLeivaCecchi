@@ -1,6 +1,6 @@
 import * as productsServices from '../services/productsServices.js';
 import { validateAddProducts, validateEditProducts } from "../utils/validation.js"; 
-import * as cartService from '../services/cartService.js';
+
 
 export const getProducts = async (req, res, next) => {
     try {

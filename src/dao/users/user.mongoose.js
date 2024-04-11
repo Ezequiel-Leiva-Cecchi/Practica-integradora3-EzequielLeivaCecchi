@@ -12,7 +12,7 @@ export class usersMongoose {
         return await usersModel.findOne({ _id: id }).lean({ virtuals: true });
     }
 
-    async getUserByEmail({ email }) {
+    async getUserByEmail(email) { // Modificamos el parámetro para que solo sea el email
         console.log(`Searching for user with email: ${email}`);
         const user = await usersModel.findOne({ email }).lean({ virtuals: true });
         console.log('User found:', user); // Agregar este registro de depuración

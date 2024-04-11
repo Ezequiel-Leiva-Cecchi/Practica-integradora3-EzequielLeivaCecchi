@@ -1,5 +1,5 @@
-import { usersDAO } from '../dao/users/index.js'; 
-import { cartService } from '../services/cartService.js';
+import { usersDAO } from '../dao/users/indexUsers.js'; 
+import * as cartService from '../services/cartService.js';
 import { createHash } from '../utils/bcrypt.js';
 
 export const register = async (userData) => {
