@@ -9,15 +9,14 @@ const secretKey = process.env.SESSION_SECRET;
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'tucorreo@gmail.com', // Coloca aquí tu dirección de correo electrónico
-        pass: 'tucontraseña' // Coloca aquí tu contraseña de correo electrónico
+        user: 'tucorreo@gmail.com', 
+        pass: 'tucontraseña' 
     }
 });
 
 // Función para generar un token de restablecimiento de contraseña
 export const generateResetToken = async (userId, expiresIn = '1h') => {
     const token = jwt.sign({ userId }, secretKey, { expiresIn });
-    // Guardar el token en la base de datos
     await passwordResetDAO.saveResetToken(userId, token);
     return token;
 };
